@@ -1,0 +1,13 @@
+*{
+  font-size: 1.2rem;
+}
+
+#main{
+  border: 1px blue solid;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  padding: 2%;
+  gap:1%
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <div id="main">
+        <h1 id="header"> Become a millionaire </h1>
+        <p id="select-category" class="selector"> Select category </p>
+
+        <select class="selectors" required>
+            <option value="1" class="select-category" > <button class="option-button">Sports</button> </option>
+            <option value="2" class="select-category"> <button class="option-button">Music</button> </option>
+            <option value="3" class="select-category"> <button class="option-button">Geography</button> </option>
+            <option value="4" class="select-category"> <button class="option-button">History</button> </option>
+        </select>
+
+        <p id="pick-difficulty" class="selector"> Select difficulty </p>
+        <select class="selectors" required>
+            <option value="1" class="pick-difficulty"> <button class="option-button"> Easy </button> </option>
+            <option value="2" class="pick-difficulty"> <button class="option-button"> Medium </button></option>
+            <option value="3" class="pick-difficulty"> <button class="option-button"> Hard </button> </option>
+        </select>
+
+        <p id="time-selector"> Set timer for answer </p>
+        <select class="selectors" required>
+        <option value="1" class="option-timer"> <button class="option-button"> 5 seconds </button> </option>
+        <option value="2" class="option-timer"> <button class="option-button"> 10 seconds </button> </option>
+        <option value="3" class="option-timer"> <button class="option-button"> 15 seconds </button> </option>
+    </select>
+
+
+         <button id="proceed"> Start quiz </button>
+
+    </div>
+
+</body>
+
+</html>
