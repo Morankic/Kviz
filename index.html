@@ -14,32 +14,30 @@
         <h1 id="header"> Become a millionaire </h1>
 
         <p id="select-category" class="selector"> Select category </p>
-
-        <select class="select-classes" required>
-            <option value="1" class="picked"  > <button class="option-button">Sports</button> </option>
-            <option value="2" class="picked"> <button class="option-button">Music</button> </option>
-            <option value="3" class="picked"> <button class="option-button">Geography</button> </option>
-            <option value="4" class="picked" selected> <button class="option-button">History</button> </option>
+        <select id="category" class="select-classes" required>
+            <option value="Sports" class="pick-category"> Sports </option>
+            <option value="Music" class="pick-category"> Music </option>
+            <option value="Geography" class="pick-category"> Geography </option>
+            <option value="History" class="pick-category" selected> History </option>
         </select>
 
         <p id="pick-difficulty" class="selector"> Select difficulty </p>
-        <select class="select-classes" required>
-            <option value="1" class="pick-difficulty" selected> <button class="option-button"> Easy </button> </option>
-            <option value="2" class="pick-difficulty"> <button class="option-button"> Medium </button></option>
-            <option value="3" class="pick-difficulty"> <buttn class="option-button"> Hard </button> </option>
+        <select id="difficulty" class="select-classes" required>
+            <option value="Easy" class="pick-difficulty" selected> Easy </option>
+            <option value="Medium" class="pick-difficulty">Medium</option>
+            <option value="Hard" class="pick-difficulty">Hard</option>
         </select>
 
         <p id="time-selector" class="selector">Set the time limit for your answers </p>
-        <select class="select-classes" required>
-        <option value="1" class="option-timer"> <button class="option-button"> 5 seconds </button> </option>
-        <option value="2" class="option-timer"> <button class="option-button"> 10 seconds </button> </option>
-        <option value="3" class="option-timer" selected> <button class="option-button"> 15 seconds </button> </option>
-    </select>
+        <select id="timer" class="select-classes" required>
+            <option value="5" class="option-timer">5 seconds </option>
+            <option value="10" class="option-timer">10 seconds </option>
+            <option value="15" class="option-timer" selected> 15 seconds </option>
+        </select>
 
-
-         <button id="proceed"> Let's go </button>
-
+        <button id="proceed"> Let's go </button>
     </div>
+    <script src="script.js"></script>
 
 </body>
 
