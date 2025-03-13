@@ -50,5 +50,11 @@ margin-bottom: 1%;
  color: white;
  position:relative;
  left: 40%;
+ transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+#proceed:hover{
+  scale: 2;
+  background-color: red;
 }
 
