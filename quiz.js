@@ -2,18 +2,20 @@ document.addEventListener("DOMContentLoaded", function () {
     let category = sessionStorage.getItem("quizCategory");
     let difficulty = sessionStorage.getItem("quizDifficulty");
     let timer = sessionStorage.getItem("quizTimer");
+    let quizHeader = document.getElementById("quiz-header");
+    let quizDetails = document.getElementById("quiz-details");
 
-    document.getElementById("quiz-header").textContent = `Quiz: ${category}`;
-    document.getElementById("quiz-details").innerHTML = `Difficulty: ${difficulty} <br> Time: ${timer} seconds`;
+    quizHeader.textContent = `Quiz: ${category}`;
+    quizDetails.innerHTML = `Difficulty: ${difficulty} <br> Time: ${timer} seconds`;
 
     let startButton = document.getElementById("start-quiz-button");
 
     if (startButton) {
         startButton.addEventListener("click", function () {
-            startButton.style.display="none";
-            document.getElementById("quiz-header").style.display = "none";
-            document.getElementById("quiz-details").style.display = "none";
-            fetchAndSaveSportQuestions(); 
+            startButton.style.display = "none";
+            quizHeader.style.display = "none";
+            quizDetails.style.display = "none";
+            fetchAndSaveSportQuestions();
         });
     } else {
         console.error('Button start-quiz-button doesnt exist in DOM');
@@ -25,15 +27,21 @@ async function fetchAndSaveSportQuestions() {
         let response = await fetch('https://the-trivia-api.com/api/questions?categories=sport_and_leisure&limit=5');
         let questions = await response.json();
         localStorage.setItem('sportsQuestions', JSON.stringify(questions));
-        console.log('Question stored at localStorage:', questions);
         displayNextQuestion();
     } catch (error) {
         console.error('Error in getting question number:', error);
     }
 }
 
-let currentQuestionIndex = 0;
-let correctAnswersCount = 0; 
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+let currentQuestionNumber = 0;
+let correctAnswersCount = 0;
 
 function displayNextQuestion() {
     let storedQuestions = localStorage.getItem('sportsQuestions');
@@ -41,40 +49,81 @@ function displayNextQuestion() {
         console.error('No questions saved in localStorage!');
         return;
     }
-    
+
     let questions = JSON.parse(storedQuestions);
-    if (currentQuestionIndex >= questions.length) {
-        
-        alert(` The end. Correct answers: ${correctAnswersCount} / ${questions.length}`);
+    if (currentQuestionNumber >= questions.length) {
+
+        let resultContainer = document.getElementById('quiz-container');
+        resultContainer.textContent = `Quiz completed. Correct answers: ${correctAnswersCount} / ${questions.length}`;
+        resultContainer.style.fontSize = '2rem';
+
+        let backButton = document.createElement('button');
+        backButton.textContent = 'Try again';
+        backButton.onclick = function () {
+            window.location.href = 'index.html';
+        };
+        backButton.style.marginTop = '10%';
+        backButton.style.padding = '10px 20px';
+        backButton.style.cursor = 'pointer';
+        backButton.style.height = '15%'
+        backButton.style.width = '40%'
+        backButton.style.borderRadius = '10%'
+
+        resultContainer.appendChild(backButton);
+
         return;
     }
-    
-    let question = questions[currentQuestionIndex];
-    let quizContainer = document.getElementById('quiz-container');
-    quizContainer.innerHTML = '';
 
-    let questionEl = document.createElement('div');
-    questionEl.textContent = `${question.question}`;
+    let question = questions[currentQuestionNumber];
+    
+    let quizContainer = document.getElementById('quiz-container');
+    quizContainer.textContent = '';
+
+    let newQuestion = document.createElement('div');
+    newQuestion.textContent = `${question.question}`;
+    newQuestion.style.fontSize='2rem'
 
     let answers = [question.correctAnswer, ...question.incorrectAnswers];
+    shuffleArray(answers);
+
+    let answersContainer = document.createElement('div');
+    answersContainer.style.display = 'grid';
+    answersContainer.style.gridTemplateColumns = 'repeat(2, 1fr)';
+    answersContainer.style.gap = '10px';
+    answersContainer.style.marginTop = '10px';
+
     answers.forEach(answer => {
         let btn = document.createElement('button');
         btn.textContent = answer;
         btn.onclick = () => {
-            checkAnswer(answer, question.correctAnswer);
+            checkAnswer(answer, question.correctAnswer,newQuestion);
         };
-        questionEl.appendChild(btn);
+        answersContainer.appendChild(btn);
     });
-    quizContainer.appendChild(questionEl);
+
+    newQuestion.appendChild(answersContainer);
+    quizContainer.appendChild(newQuestion);
 }
 
-function checkAnswer(selected, correct) {
+function checkAnswer(selected, correct,questionContainer) {
+    let feedbackContainer = document.createElement('div');
+    feedbackContainer.style.marginTop = '10px';
+    feedbackContainer.style.color = 'white';
+    feedbackContainer.style.fontSize='2rem'
+
     if (selected === correct) {
-        alert('Correct');
-        correctAnswersCount++;  
+        feedbackContainer.textContent = 'Correct';
+        correctAnswersCount++;
     } else {
-        alert(`Wrong answer. Correct is: ${correct}`);
+        feedbackContainer.textContent = `Wrong answer. Correct is: ${correct}`;
+        feedbackContainer.style.color = 'white';
+        
     }
-    currentQuestionIndex++;
-    displayNextQuestion();
+    questionContainer.appendChild(feedbackContainer);
+
+    currentQuestionNumber++;
+    setTimeout(() => {
+        displayNextQuestion();
+    }, 3000);
+  
 }
