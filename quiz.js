@@ -15,21 +15,33 @@ document.addEventListener("DOMContentLoaded", function () {
             startButton.style.display = "none";
             quizHeader.style.display = "none";
             quizDetails.style.display = "none";
-            fetchAndSaveSportQuestions();
+            fetchAndSaveQuestions(category);
         });
     } else {
-        console.error('Button start-quiz-button doesnt exist in DOM');
+        console.error('Button start-quiz-button does not exist in DOM');
     }
 });
 
-async function fetchAndSaveSportQuestions() {
+async function fetchAndSaveQuestions(category) {
+    let categoryMap = {
+        "Science": "science",
+        "Geography": "geography",
+        "Arts & Literature": "arts_and_literature",
+        "Sport & Leisure": "sport_and_leisure",
+        "Music": "music",
+        "History": "history",
+        "Food & Drink": "food_and_drink"
+    };
+
+    let apiCategory = categoryMap[category] || "general_knowledge"; // Default ako nema kategorije
+
     try {
-        let response = await fetch('https://the-trivia-api.com/api/questions?categories=sport_and_leisure&limit=5');
+        let response = await fetch(`https://the-trivia-api.com/api/questions?categories=${apiCategory}&limit=5`);
         let questions = await response.json();
-        localStorage.setItem('sportsQuestions', JSON.stringify(questions));
+        localStorage.setItem('quizQuestions', JSON.stringify(questions));
         displayNextQuestion();
     } catch (error) {
-        console.error('Error in getting question number:', error);
+        console.error('Error fetching questions:', error);
     }
 }
 
@@ -44,7 +56,7 @@ let currentQuestionNumber = 0;
 let correctAnswersCount = 0;
 
 function displayNextQuestion() {
-    let storedQuestions = localStorage.getItem('sportsQuestions');
+    let storedQuestions = localStorage.getItem('quizQuestions');
     if (!storedQuestions) {
         console.error('No questions saved in localStorage!');
         return;
@@ -52,7 +64,6 @@ function displayNextQuestion() {
 
     let questions = JSON.parse(storedQuestions);
     if (currentQuestionNumber >= questions.length) {
-
         let resultContainer = document.getElementById('quiz-container');
         resultContainer.textContent = `Quiz completed. Correct answers: ${correctAnswersCount} / ${questions.length}`;
         resultContainer.style.fontSize = '2rem';
@@ -65,9 +76,9 @@ function displayNextQuestion() {
         backButton.style.marginTop = '10%';
         backButton.style.padding = '10px 20px';
         backButton.style.cursor = 'pointer';
-        backButton.style.height = '15%'
-        backButton.style.width = '40%'
-        backButton.style.borderRadius = '10%'
+        backButton.style.height = '15%';
+        backButton.style.width = '40%';
+        backButton.style.borderRadius = '10%';
 
         resultContainer.appendChild(backButton);
 
@@ -81,7 +92,7 @@ function displayNextQuestion() {
 
     let newQuestion = document.createElement('div');
     newQuestion.textContent = `${question.question}`;
-    newQuestion.style.fontSize='2rem'
+    newQuestion.style.fontSize='2rem';
 
     let answers = [question.correctAnswer, ...question.incorrectAnswers];
     shuffleArray(answers);
@@ -96,7 +107,7 @@ function displayNextQuestion() {
         let btn = document.createElement('button');
         btn.textContent = answer;
         btn.onclick = () => {
-            checkAnswer(answer, question.correctAnswer,newQuestion);
+            checkAnswer(answer, question.correctAnswer, newQuestion);
         };
         answersContainer.appendChild(btn);
     });
@@ -105,11 +116,11 @@ function displayNextQuestion() {
     quizContainer.appendChild(newQuestion);
 }
 
-function checkAnswer(selected, correct,questionContainer) {
+function checkAnswer(selected, correct, questionContainer) {
     let feedbackContainer = document.createElement('div');
     feedbackContainer.style.marginTop = '10px';
     feedbackContainer.style.color = 'white';
-    feedbackContainer.style.fontSize='2rem'
+    feedbackContainer.style.fontSize='2rem';
 
     if (selected === correct) {
         feedbackContainer.textContent = 'Correct';
@@ -117,7 +128,6 @@ function checkAnswer(selected, correct,questionContainer) {
     } else {
         feedbackContainer.textContent = `Wrong answer. Correct is: ${correct}`;
         feedbackContainer.style.color = 'white';
-        
     }
     questionContainer.appendChild(feedbackContainer);
 
@@ -125,5 +135,4 @@ function checkAnswer(selected, correct,questionContainer) {
     setTimeout(() => {
         displayNextQuestion();
     }, 3000);
-  
 }
